@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Toast from '../components/Toast';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../features/slices/cartSlice';
 
 const featuredProducts = [
   { name: 'Classic Denim Jacket', price: '₹2,499', image: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=400&q=80', badge: 'Trending' },
@@ -18,10 +20,22 @@ const categories = [
 
 const Home = () => {
   const [toast, setToast] = useState(false);
+  const dispatch = useDispatch();
 
   const showToast = () => {
     setToast(true);
     setTimeout(() => setToast(false), 2000);
+  };
+
+  const handleAddToCart = (prod) => {
+    dispatch(addToCart({
+      id: typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : Date.now(),
+      name: prod.name,
+      price: prod.price,
+      image: prod.image,
+      quantity: 1,
+    }));
+    showToast();
   };
 
   return (
@@ -104,7 +118,7 @@ const Home = () => {
                 <button
                   className="mt-6 bg-gradient-to-r from-indigo-500 to-pink-500 text-white px-6 py-2 rounded-full font-semibold shadow hover:scale-105 hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 active:translate-y-1 focus:outline-none"
                   aria-label={`Add ${prod.name} to cart`}
-                  onClick={showToast}
+                  onClick={() => handleAddToCart(prod)}
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m13-9l2 9m-5-9V6a2 2 0 10-4 0v7" />

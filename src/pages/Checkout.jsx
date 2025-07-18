@@ -134,8 +134,8 @@ const Checkout = () => {
           <span className="bg-yellow-100 text-yellow-600 px-2 py-0.5 rounded-full text-xs font-semibold">UPI</span>
         </div>
       </div>
-    </div>
-  );
+  </div>
+);
 };
 
 export default Checkout; 

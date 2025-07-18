@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Outlet, NavLink } from 'react-router-dom';
 import { FaShoppingCart, FaBars, FaSearch, FaInstagram, FaTwitter, FaFacebook } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
 
 const MainLayout = () => {
   const [navOpen, setNavOpen] = useState(false);
+  const cart = useSelector(state => state.cart);
+  const cartQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <div className="min-h-screen flex flex-col font-['Montserrat'] bg-gradient-to-br from-gray-50 via-blue-50 to-pink-50">
@@ -42,7 +45,7 @@ const MainLayout = () => {
             >
               <FaShoppingCart className="mr-1" />
               Cart
-              <span className="ml-1 bg-pink-500 text-white text-xs rounded-full px-2 py-0.5">2</span>
+              <span className="ml-1 bg-pink-500 text-white text-xs rounded-full px-2 py-0.5">{cartQuantity}</span>
             </NavLink>
           </nav>
           <div className="hidden sm:flex items-center bg-gray-100 rounded-full px-3 py-1 mx-4">
@@ -90,7 +93,7 @@ const MainLayout = () => {
               }
             >
               <FaShoppingCart className="mr-2" /> Cart
-              <span className="ml-1 bg-pink-500 text-white text-xs rounded-full px-2 py-0.5">2</span>
+              <span className="ml-1 bg-pink-500 text-white text-xs rounded-full px-2 py-0.5">{cartQuantity}</span>
             </NavLink>
             <div className="flex items-center bg-gray-100 rounded-full px-3 py-1 mt-2">
               <FaSearch className="text-gray-400 mr-2" />

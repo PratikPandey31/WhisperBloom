@@ -1,38 +1,22 @@
 import React, { useState } from 'react';
 import { FaTrash } from 'react-icons/fa';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateQuantity, removeFromCart } from '../features/slices/cartSlice';
 
-const initialCart = [
-  {
-    id: 1,
-    name: 'Classic Denim Jacket',
-    price: 2499,
-    image: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=400&q=80',
-    quantity: 1,
-  },
-  {
-    id: 2,
-    name: 'Summer Dress',
-    price: 1299,
-    image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80',
-    quantity: 2,
-  },
-];
 
 const Cart = () => {
-  const [cart, setCart] = useState(initialCart);
+  const cart = useSelector(state => state.cart);
+  const dispatch = useDispatch();
 
-  const updateQuantity = (id, delta) => {
-    setCart(cart =>
-      cart.map(item =>
-        item.id === id
-          ? { ...item, quantity: Math.max(1, item.quantity + delta) }
-          : item
-      )
-    );
+  const handleUpdateQuantity = (id, delta) => {
+    const item = cart.find(i => i.id === id);
+    if (item) {
+      dispatch(updateQuantity({ id, quantity: Math.max(1, item.quantity + delta) }));
+    }
   };
 
-  const removeItem = id => {
-    setCart(cart => cart.filter(item => item.id !== id));
+  const handleRemoveItem = id => {
+    dispatch(removeFromCart(id));
   };
 
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -71,13 +55,13 @@ const Cart = () => {
               <div className="text-pink-600 font-bold text-xl mb-2">₹{item.price}</div>
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => updateQuantity(item.id, -1)}
+                  onClick={() => handleUpdateQuantity(item.id, -1)}
                   className="w-8 h-8 rounded-full bg-gray-100 hover:bg-indigo-100 text-xl font-bold flex items-center justify-center"
                   aria-label="Decrease quantity"
                 >-</button>
                 <span className="px-3">{item.quantity}</span>
                 <button
-                  onClick={() => updateQuantity(item.id, 1)}
+                  onClick={() => handleUpdateQuantity(item.id, 1)}
                   className="w-8 h-8 rounded-full bg-gray-100 hover:bg-indigo-100 text-xl font-bold flex items-center justify-center"
                   aria-label="Increase quantity"
                 >+</button>
@@ -87,7 +71,7 @@ const Cart = () => {
               <div className="text-gray-500">Subtotal:</div>
               <div className="font-bold text-lg">₹{item.price * item.quantity}</div>
               <button
-                onClick={() => removeItem(item.id)}
+                onClick={() => handleRemoveItem(item.id)}
                 className="text-red-500 hover:text-red-700 p-2"
                 aria-label="Remove item"
               >
